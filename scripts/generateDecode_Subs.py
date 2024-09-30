@@ -390,7 +390,7 @@ def buildNode(toROS):
 
 
 #/etc/libpanda.d has a JSON with the make,model,trim,year
-f = open('/etc/libpanda.d/vin_details.json')
+f = open('./vin_details.json')
 vin_details = json.load(f)
 f.close()
 #find the correct DBC and ROS msg dict based on the vin details
