@@ -17,20 +17,35 @@ Note to this repos: This is a fork of the original repo https://github.com/jmscs
     git clone https://github.com/AARC-lab/can_to_ros
     cd can_to_ros/scripts
     ```
-2. Step 1: Edit the `vin` file in `scripts` folder, and enter the VIN number of the vehicle whose CAN bus data you have.
-2. Step 2: Run `regenerateCanToRos.sh` as
+
+2. Clone https://github.com/jmscslgroup/strym your home directory
+
+```
+cd ~
+git clone https://github.com/jmscslgroup/strym
+```
+
+3: Edit the `vin` file in `scripts` folder of `can_to_ros`, and enter the VIN number of the vehicle whose CAN bus data you have.
+
+```
+cd ~/catkin_ws/src/can_to_ros/scripts
+gedit vin
+```
+enter the appropriate VIN.
+
+4: Run `regenerateCanToRos.sh` as
 
 ```
 ./regenerateCanToRos.sh
 ```
 
-3. Recompile your catkin workspace
+5. Recompile your catkin workspace
 ```
 cd ~/catkin_ws
 catkin_make
 ```
 
-4. Execute the launch file as:
+6. Execute the launch file as:
 
 ```
 roslaunch can_to_ros piping.launch publish_csv_args:="-c 2021_04_08/2021-04-08-12-26-57_2T3Y1RFV8KC014025_CAN_Messages.csv -g 2021-04-08-12-26-57_2T3Y1RFV8KC014025_GPS_Messages.csv" bag_name:=2021-04-08-12-26-57_2T3Y1RFV8KC014025_BAG_Messages.bag
