@@ -106,7 +106,7 @@ $ catkin_make
 
 ```
 $ cd ~/catkin_ws/src/
-$ git clone https://github.com/jmscslgroup/can_to_ros.git
+$ git clone https://github.com/AARC-lab/can_to_ros.git
 ```
 Note: make sure to install libpanda before running ```catkin_make```.
 
