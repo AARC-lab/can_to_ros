@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <arg name="hwil" default="false"/>
+    <arg name="hoffman" default="false"/>
+    <arg name="robot" default="catvehicle"/>
+    <group ns="ego">
+        <node pkg="explicitaccel_microaccel" type="explicitaccel_microaccel" name="explicitaccel_microaccel_node" output="screen">
+            <remap from="/$(arg robot)/cmd_vel" to ="/$(arg robot)/cmd_control_vel" if="$(eval arg('hoffman') == True and arg('hwil') == False )"/>
+        </node>
+    
+         <node pkg="hoffmansubsystem" type="hoffmansubsystem_node" name="hoffmansubsystem_ego" output="screen" if="$(arg hoffman)"/>
+    </group>
+</launch>
+
+
+
