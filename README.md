@@ -1,16 +1,51 @@
 # can_to_ros
 
-can_to_ros is a ROS package that provide a real-time and offline decoding of CAN bus messages. It is also integrated with [libpanda](https://github.com/jmscslgroup/libpanda) to send control commands to Toyota RAV4.
+`can_to_ros` is a ROS package that provide a real-time and offline decoding of CAN bus messages. It is also integrated with [libpanda](https://github.com/jmscslgroup/libpanda) to send control commands to Toyota RAV4.
 
+Note to this repos: This is a fork of the original repo https://github.com/jmscslgroup/can_to_ros and serves to playbag CAN data file as on ROS network in **ros-realtime** and saves as a bag file. This is intended for testing any controller algorithm with software-in-the-loop simulation but with the real data.
 
-### Software Requirements and Dependencies
--------------------------
+## Software Requirements and Dependencies
 * Ubuntu 18.04/20.04 AMD64 or Ubuntu18.04/20.04 ARM
 * ROS [melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) or ROS [noetic](http://wiki.ros.org/noetic/Installation)
 * [libpanda](https://github.com/jmscslgroup/libpanda) (must be installed in /opt directory)
 
+## Playing back CAN data on ROS network
+
+1. Clone this repository to `src` directory of your catkin workspace `~/catkin_ws/`.
+    ```
+    cd ~/catkin_ws/src
+    git clone https://github.com/AARC-lab/can_to_ros
+    cd can_to_ros/scripts
+    ```
+2. Step 1: Edit the `vin` file in `scripts` folder, and enter the VIN number of the vehicle whose CAN bus data you have.
+2. Step 2: Run `regenerateCanToRos.sh` as
+
+```
+./regenerateCanToRos.sh
+```
+
+3. Recompile your catkin workspace
+```
+cd ~/catkin_ws
+catkin_make
+```
+
+4. Execute the launch file as:
+
+```
+roslaunch can_to_ros piping.launch publish_csv_args:="-c 2021_04_08/2021-04-08-12-26-57_2T3Y1RFV8KC014025_CAN_Messages.csv -g 2021-04-08-12-26-57_2T3Y1RFV8KC014025_GPS_Messages.csv" bag_name:=2021-04-08-12-26-57_2T3Y1RFV8KC014025_BAG_Messages.bag
+
+```
+
+The above command plays back 2021-04-08-12-26-57_2T3Y1RFV8KC014025_CAN_Messages.csv on the ROS network and is suitable for testing any vehicle application that may consume live vehicle data, and simultaneously saves the data as a rosbag file.
+
+___
+___
+___
+
 ## Launch File Descriptions:
-#### vehicle_control.launch
+
+### vehicle_control.launch
 This is automatically installed in robot_upstart with libpanda's scripts/installCanToRos.sh script
 
 Invokes the following:
@@ -28,7 +63,7 @@ Invokes the following:
  /cmd_accel - std_msgs/Float64 - This is where control commands should be sent.  cut_in_disengager will ensure convert this to /cmd_accel_safe as needed, then publishCommands will convert /cmd_accel_safe to /car/cruise/accel_input
  /car/can/raw - std_msgs/String - Reports CAN data.  Use the node subs_fs.cpp to interpret these into car sensing data
 
-#### piping.launch
+### piping.launch
 This launch file allows you to pipe in replayed CAN and/or GPS data stored in CSV files, as if they are being read directly from the car in real time. Make sure that the generated subs.cpp node matches the vehicle type of the CSV file you are playing back data from. Caviat: the playback timing is not perfect in all cases but still very useful.
 
 > Usage:
