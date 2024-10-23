@@ -2,7 +2,7 @@
 
 import json
 import cantools
-
+import os
 
 def keystoint(x):
     try:
@@ -11,9 +11,9 @@ def keystoint(x):
         return x
 
 def findDBC(vin_details):
-    userFile = open('/etc/libpanda.d/libpanda_usr','r')
-    user = userFile.read().rstrip('\n\r')
-    userFile.close()
+    
+
+    user = os.path.expanduser('~')
     jsonfile = None
     dbcfile = None
     
@@ -22,13 +22,13 @@ def findDBC(vin_details):
             jsonfile = 'toyota_rav4.json'
             if int(vin_details['ModelYear']) >= 2021:
                 #TODO: figure out where the dbc files will be
-                dbcfile = '/home/' + user + '/strym/strym/dbc/toyota_rav4_2021.dbc'
+                dbcfile = user + '/strym/strym/dbc/toyota_rav4_2021.dbc'
             elif int(vin_details['ModelYear']) == 2020:
-                dbcfile = '/home/' + user + '/strym/strym/dbc/toyota_rav4_2020.dbc'
+                dbcfile = user + '/strym/strym/dbc/toyota_rav4_2020.dbc'
             elif int(vin_details['ModelYear']) == 2019:
-                dbcfile = '/home/' + user + '/strym/strym/dbc/toyota_rav4_2019.dbc'
+                dbcfile = user + '/strym/strym/dbc/toyota_rav4_2019.dbc'
             if 'HV' in vin_details['Trim']:
-                dbcfile = '/home/' + user + '/strym/strym/dbc/toyota_rav4_hybrid.dbc'
+                dbcfile = user + '/strym/strym/dbc/toyota_rav4_hybrid.dbc'
 #space here to add in info for honda and nissan vehicles
     if vin_details['Make'] == 'NISSAN':
         if vin_details['Model'] == 'Rogue':
@@ -36,12 +36,12 @@ def findDBC(vin_details):
             if int(vin_details['ModelYear']) >= 2021:
                 #TODO: figure out where the dbc files will be
                 # dbcfile = '/Users/mnice/Documents/GitHub/strym/strym/dbc/nissan_rogue_2021.dbc'
-                dbcfile = '/home/' + user + '/strym/strym/dbc/nissan_rogue_2021.dbc'
+                dbcfile = user + '/strym/strym/dbc/nissan_rogue_2021.dbc'
                 # dbcfile = '/home/' + user + '/strym/strym/dbc/nissan_rogue_experimental.dbc'
     # print('the DBC is set as %s'%(dbcfile))
     if vin_details['Make'] == 'HONDA':
         jsonfile='honda_pilot.json'
-        dbcfile = '/home/' + user + '/strym/strym/dbc/honda_pilot_2017.dbc'
+        dbcfile = user + '/strym/strym/dbc/honda_pilot_2017.dbc'
 
     return jsonfile, dbcfile
 
@@ -77,7 +77,7 @@ def findMessageInfo(messageNameorNum,db):
     return messageInfo
 
 #/etc/libpanda.d has a JSON with the make,model,trim,year
-f = open('/etc/libpanda.d/vin_details.json')
+f = open('./vin_details.json')
 vin_details = json.load(f)
 f.close()
 #find the correct DBC and ROS msg dict based on the vin details
